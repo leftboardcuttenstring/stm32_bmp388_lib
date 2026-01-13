@@ -5,12 +5,17 @@
 #include "bmp180.h"
 
 UART_HandleTypeDef huart2;
+I2C_HandleTypeDef i2c;
 
 /*--Function headers for STM32-------------------------------------------------*/
 
 void SystemClock_Config(void);
 void MX_GPIO_Init(void);
 void MX_USART2_UART_Init(void);
+void i2c_init(void);
+
+//uint8_t bmp180_start_measurement = 0x2E;
+//char string[10] = {0};
 
 int main(void)
 {
@@ -19,7 +24,18 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
 
-  bmp180.sensor_name = "hello";
+  i2c_init();
+
+  //bmp180_init();
+
+  /*if (HAL_I2C_IsDeviceReady(&i2c, bmp180_addr, 3, 100) != HAL_OK) {
+      //snprintf((char *)string, sizeof(string), "f\n");
+      HAL_UART_Transmit(&huart2, (const uint8_t *)"f\n", strlen((char *)"f\n"), HAL_MAX_DELAY);
+  }*/
+
+  if (HAL_I2C_IsDeviceReady(&i2c, (0x77 << (uint16_t)1), 3, HAL_MAX_DELAY) != HAL_OK) {
+    HAL_UART_Transmit(&huart2, "Hello\n", sizeof("Hello\n")-1, HAL_MAX_DELAY);
+  }
 
   while (1)
   {
@@ -40,6 +56,22 @@ void MX_USART2_UART_Init(void)
   HAL_UART_Init(&huart2);
 }
 
+void i2c_init(void)
+{
+  i2c.Instance = I2C1;
+  i2c.Init.ClockSpeed = 100000;
+  i2c.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  i2c.Init.OwnAddress1 = 0;
+  i2c.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  i2c.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  i2c.Init.OwnAddress2 = 0;
+  i2c.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  i2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&i2c) == HAL_OK) {
+    HAL_UART_Transmit(&huart2, (const uint8_t *)"fine\n", strlen((char *)"fine\n"), HAL_MAX_DELAY);
+  }
+}
+
 void MX_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -55,14 +87,10 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-  GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8;
+  /*GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 8, 0);
-  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 10, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);*/
 }
 
 void _init(void) {

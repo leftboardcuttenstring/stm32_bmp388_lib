@@ -13,11 +13,10 @@ extern "C" {
 typedef uint8_t sensor_address;
 
 struct sensor_t {
-    sensor_address actual_address;
-    char* sensor_name;
+    sensor_address address;
     void* config_data;
-    void (*init)(void);
-    double (*get_data)(void);
+    void (*init_fn)(void);
+    double (*get_data_fn)(void);
 };
 
 /*---------------------------------------------------------------------------*/
