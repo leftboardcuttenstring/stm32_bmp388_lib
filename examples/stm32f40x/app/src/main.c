@@ -14,28 +14,15 @@ void MX_GPIO_Init(void);
 void MX_USART2_UART_Init(void);
 void i2c_init(void);
 
-//uint8_t bmp180_start_measurement = 0x2E;
-//char string[10] = {0};
-
 int main(void)
 {
   HAL_Init();
   SystemClock_Config();
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-
   i2c_init();
 
-  //bmp180_init();
-
-  /*if (HAL_I2C_IsDeviceReady(&i2c, bmp180_addr, 3, 100) != HAL_OK) {
-      //snprintf((char *)string, sizeof(string), "f\n");
-      HAL_UART_Transmit(&huart2, (const uint8_t *)"f\n", strlen((char *)"f\n"), HAL_MAX_DELAY);
-  }*/
-
-  if (HAL_I2C_IsDeviceReady(&i2c, (0x77 << (uint16_t)1), 3, HAL_MAX_DELAY) != HAL_OK) {
-    HAL_UART_Transmit(&huart2, "Hello\n", sizeof("Hello\n")-1, HAL_MAX_DELAY);
-  }
+  bmp180_init();
 
   while (1)
   {

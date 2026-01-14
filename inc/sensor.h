@@ -16,7 +16,7 @@ struct sensor_t {
     sensor_address address;
     void* config_data;
     void (*init_fn)(void);
-    double (*get_data_fn)(void);
+    uint32_t (*get_data_fn)(void);
 };
 
 /*---------------------------------------------------------------------------*/
