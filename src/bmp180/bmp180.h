@@ -15,7 +15,9 @@ extern "C" {
 #define bmp180_start_measurement_flag_register 0xF4
 #define bmp180_start_measurement_size 1
 #define bmp180_start_measurement_flag_register_size 1
-#define bmp180_init_is_done "BMP180 init is done"
+#define bmp180_init_success_msg "BMP180 init success"
+#define bmp180_init_failure_msg "BMP180 init failure"
+#define bmp180_oss 0
 
 /*--Extern objects-----------------------------------------------------------*/
 
@@ -23,7 +25,7 @@ extern struct sensor_t bmp180;
 extern I2C_HandleTypeDef i2c;
 extern UART_HandleTypeDef huart2;
 
-/*--Function headers---------------------------------------------------------*/
+/*--Functions----------------------------------------------------------------*/
 
 /**
  * @brief 
